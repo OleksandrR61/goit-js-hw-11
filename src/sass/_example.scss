@@ -1,5 +1,11 @@
 body {
+  width: 100vw;
+  height: 100vh;
+
   background-color: #ffd700;
+  background-image: url("../images/logo.png");
+  background-repeat: no-repeat;
+  background-position: center center;
 }
 
 header {
@@ -37,5 +43,43 @@ header {
       background-color: #ddb588;
       color: #883506;
     }
+  }
+}
+
+main {
+  padding: 50px 10px;
+}
+
+.gallery {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.photo-card {
+  display: flex;
+  flex-basis: calc((100% - 30px) / 4);
+  flex-direction: column;
+
+  border-color: tomato;
+  border: 5px;
+  border-radius: 5px;
+
+  background-color: #1168c9;
+  color: #00e811;
+
+  text-align: center;
+  justify-content: space-between;
+
+  padding: 5px;
+
+  img {
+    width: 100%;
+
+    border-radius: 5px 5px 0 0;
+  }
+
+  .info {
+    align-items: flex-end;
   }
 }

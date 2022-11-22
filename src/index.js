@@ -2,6 +2,12 @@ import axios from "axios";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
+let page = 0;
+let query = "";
+
+let btnLoadMoreRef = getElement(".load-more");
+showBtnLoadMore(false);
+
 getElement("#search-form").addEventListener("submit", onSearch);
 
 function getElement(selector) {
@@ -13,27 +19,34 @@ function onSearch(event) {
     let img = [];
 
     try {
-        fetchPics(event.srcElement.searchQuery.value.trim());
+        fetchPics(event.srcElement.searchQuery.value.trim(), true);
     } catch (error) {
         Notify.failure(error.message);
     }        
 }
 
-async function fetchPics(str) {
-    let images = [];
-    renderGallery(images);
+async function fetchPics(str, isNewSearch) {
+    if (isNewSearch) {
+        renderGallery([]);
+        page = 0;
+        query = str;
 
-    if (!str) {
-        Notify.info("You have entered an empty search string.");
-        return;
+        if (!str) {
+            Notify.info("You have entered an empty search string.");
+            return;
+        }
     }
+
+    page += 1;
 
     const searchParams = new URLSearchParams({
         key: "31500744-82fe9083580524fe3bc41bb93",
-        q: str,
+        q: query,
         image_type: "photo",
         orientation: "horizontal",
-        safesearch: true
+        safesearch: true,
+        page,
+        per_page: 40
     }).toString();
 
     try {
@@ -45,12 +58,11 @@ async function fetchPics(str) {
             throw new Error("Sorry, there are no images matching your search query. Please try again.")
         }
 
-        images = response.data.hits;
+        renderGallery(response.data.hits);
+        showBtnLoadMore(true);
     } catch (error) {
         Notify.failure(error.message);
-    }
-
-    renderGallery(images);
+    };
 }
 
 function renderGallery(data) {
@@ -77,4 +89,8 @@ function renderGallery(data) {
             </div>`});        
     }
     getElement(".gallery").innerHTML = markup;
+}
+
+function showBtnLoadMore(isShow) {
+    btnLoadMoreRef.style.display = isShow ? "block" : "none";
 }

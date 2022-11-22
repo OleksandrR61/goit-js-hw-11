@@ -5,9 +5,7 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 let page = 0;
 let query = "";
 
-let btnLoadMoreRef = getElement(".load-more");
-showBtnLoadMore(false);
-
+clearCallery("");
 getElement("#search-form").addEventListener("submit", onSearch);
 
 function getElement(selector) {
@@ -27,8 +25,7 @@ function onSearch(event) {
 
 async function fetchPics(str, isNewSearch) {
     if (isNewSearch) {
-        renderGallery([]);
-        page = 0;
+        clearCallery("");
         query = str;
 
         if (!str) {
@@ -65,8 +62,13 @@ async function fetchPics(str, isNewSearch) {
     };
 }
 
+function clearCallery() {
+    page = 0;
+    renderGallery([]);
+    showBtnLoadMore(false);
+}
+
 function renderGallery(data) {
-    console.log(data);
     let markup = "";
     if (data.length) {
         data.map(({largeImageURL, webformatURL, tags, likes, views, comments, downloads}) => {
@@ -92,5 +94,5 @@ function renderGallery(data) {
 }
 
 function showBtnLoadMore(isShow) {
-    btnLoadMoreRef.style.display = isShow ? "block" : "none";
+    getElement(".load-more").style.display = isShow ? "block" : "none";
 }

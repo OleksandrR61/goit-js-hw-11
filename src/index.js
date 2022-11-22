@@ -5,8 +5,11 @@ import { Loading } from 'notiflix/build/notiflix-loading-aio';
 let page = 0;
 let query = "";
 
-clearCallery("");
+let btnLoadMoreRef = getElement(".load-more");
+
+clearCallery();
 getElement("#search-form").addEventListener("submit", onSearch);
+btnLoadMoreRef.addEventListener("click", onLoadMore);
 
 function getElement(selector) {
     return document.querySelector(selector);
@@ -14,10 +17,22 @@ function getElement(selector) {
 
 function onSearch(event) {
     event.preventDefault();
-    let img = [];
+    getElement("[data-submit]").blur();
 
     try {
         fetchPics(event.srcElement.searchQuery.value.trim(), true);
+    } catch (error) {
+        Notify.failure(error.message);
+    }
+
+    event.currentTarget.reset();        
+}
+
+function onLoadMore() {
+    btnLoadMoreRef.blur();
+
+    try {
+        fetchPics(query, false);
     } catch (error) {
         Notify.failure(error.message);
     }        
@@ -35,6 +50,7 @@ async function fetchPics(str, isNewSearch) {
     }
 
     page += 1;
+    showBtnLoadMore(false);
 
     const searchParams = new URLSearchParams({
         key: "31500744-82fe9083580524fe3bc41bb93",
@@ -47,7 +63,11 @@ async function fetchPics(str, isNewSearch) {
     }).toString();
 
     try {
-        Loading.hourglass();
+        if (isNewSearch) {
+            Loading.hourglass();
+        } else {
+            Loading.dots();
+        }
         let response = await axios.get(`https://pixabay.com/api/?${searchParams}`);
         Loading.remove();
 
@@ -91,8 +111,9 @@ function renderGallery(data) {
             </div>`});        
     }
     getElement(".gallery").innerHTML = markup;
+    window.scrollTo(top);
 }
 
 function showBtnLoadMore(isShow) {
-    getElement(".load-more").style.display = isShow ? "block" : "none";
+    btnLoadMoreRef.style.display = isShow ? "block" : "none";
 }

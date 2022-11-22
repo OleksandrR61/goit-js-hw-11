@@ -1,6 +1,8 @@
 import axios from "axios";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
+import SimpleLightbox from "simplelightbox";
+import "simplelightbox/dist/simple-lightbox.min.css";
 
 let page = 1;
 let totalPage = 1;
@@ -100,7 +102,7 @@ function renderGallery(data) {
     let markup = "";
     if (data.length) {
         data.map(({largeImageURL, webformatURL, tags, likes, views, comments, downloads}) => {
-            markup += `<div class="photo-card">
+            markup += `<a href="${largeImageURL}" class="photo-card">
               <img src="${webformatURL}" alt="${tags}" loading="lazy" />
               <div class="info">
                 <p class="info-item">
@@ -116,7 +118,7 @@ function renderGallery(data) {
                   <b>${downloads} Downloads</b>
                 </p>
               </div>
-            </div>`});        
+            </a>`});        
     }
     getElement(".gallery").innerHTML = markup;
     window.scrollTo(top);

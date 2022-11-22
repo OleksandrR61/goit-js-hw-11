@@ -7,7 +7,9 @@ import "simplelightbox/dist/simple-lightbox.min.css";
 let page = 1;
 let totalPage = 1;
 let query = "";
+let lightBox = null;
 
+let galleryRef = getElement(".gallery");
 let btnLoadMoreRef = getElement(".load-more");
 
 clearCallery();
@@ -94,7 +96,7 @@ async function fetchPics(str, isNewSearch) {
 
 function clearCallery() {
     page = 1;
-    renderGallery([]);
+    galleryRef.innerHTML = "";
     showBtnLoadMore(false);
 }
 
@@ -102,8 +104,8 @@ function renderGallery(data) {
     let markup = "";
     if (data.length) {
         data.map(({largeImageURL, webformatURL, tags, likes, views, comments, downloads}) => {
-            markup += `<a href="${largeImageURL}" class="photo-card">
-              <img src="${webformatURL}" alt="${tags}" loading="lazy" />
+            markup += `<a href="${largeImageURL}" class="photo-card gallery__item">
+              <img src="${webformatURL}" alt="${tags}" loading="lazy" class="gallery__image" />
               <div class="info">
                 <p class="info-item">
                   <b>${likes} Likes</b>
@@ -120,8 +122,13 @@ function renderGallery(data) {
               </div>
             </a>`});        
     }
-    getElement(".gallery").innerHTML = markup;
-    window.scrollTo(top);
+    galleryRef.insertAdjacentHTML("beforeend", markup);
+
+    if (!lightBox) {
+        lightBox = new SimpleLightbox('.gallery a', { captionsData: "alt", captionDelay: 500 });
+    } else {
+        lightBox.refresh();
+    }
 }
 
 function showBtnLoadMore(isShow) {

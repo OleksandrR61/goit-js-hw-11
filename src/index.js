@@ -80,6 +80,7 @@ async function fetchPics(str, isNewSearch) {
 
         if (isNewSearch) {
             totalPage = Math.ceil(response.data.totalHits / 40);
+            Notify.info(`Hooray! We found ${response.data.totalHits} images.`);
         }
 
         renderGallery(response.data.hits);

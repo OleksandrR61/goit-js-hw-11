@@ -43,7 +43,7 @@ function onLoadMore() {
         fetchPics(query, false);
     } catch (error) {
         Notify.failure(error.message);
-    }        
+    }
 }
 
 async function fetchPics(str, isNewSearch) {
@@ -123,7 +123,19 @@ function renderGallery(data) {
             </a>`});        
     }
     galleryRef.insertAdjacentHTML("beforeend", markup);
+    
+    addLightBox();
 
+    if (page > 1) {
+        scrollScreen();
+    }
+}
+
+function showBtnLoadMore(isShow) {
+    btnLoadMoreRef.style.display = isShow ? "block" : "none";
+}
+
+function addLightBox() {
     if (!lightBox) {
         lightBox = new SimpleLightbox('.gallery a', { captionsData: "alt", captionDelay: 500 });
     } else {
@@ -131,6 +143,13 @@ function renderGallery(data) {
     }
 }
 
-function showBtnLoadMore(isShow) {
-    btnLoadMoreRef.style.display = isShow ? "block" : "none";
+function scrollScreen() {
+    let { height: cardHeight } = document
+        .querySelector(".gallery")
+        .firstElementChild.getBoundingClientRect();
+
+    window.scrollBy({
+        top: cardHeight * 2,
+        behavior: "smooth",
+    });
 }

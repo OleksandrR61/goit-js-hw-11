@@ -2,7 +2,8 @@ import axios from "axios";
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 
-let page = 0;
+let page = 1;
+let totalPage = 1;
 let query = "";
 
 let btnLoadMoreRef = getElement(".load-more");
@@ -17,20 +18,23 @@ function getElement(selector) {
 
 function onSearch(event) {
     event.preventDefault();
-    getElement("[data-submit]").blur();
-
+    
     try {
         fetchPics(event.srcElement.searchQuery.value.trim(), true);
     } catch (error) {
         Notify.failure(error.message);
     }
-
-    event.currentTarget.reset();        
 }
 
 function onLoadMore() {
-    btnLoadMoreRef.blur();
+    page += 1;
 
+    if (page > totalPage) {
+        showBtnLoadMore(false);
+        Notify.info("We're sorry, but you've reached the end of search results.");
+        return;
+    }
+    
     try {
         fetchPics(query, false);
     } catch (error) {
@@ -49,7 +53,6 @@ async function fetchPics(str, isNewSearch) {
         }
     }
 
-    page += 1;
     showBtnLoadMore(false);
 
     const searchParams = new URLSearchParams({
@@ -70,9 +73,13 @@ async function fetchPics(str, isNewSearch) {
         }
         let response = await axios.get(`https://pixabay.com/api/?${searchParams}`);
         Loading.remove();
-
+        
         if (response.data.hits.length === 0) {
             throw new Error("Sorry, there are no images matching your search query. Please try again.")
+        }
+
+        if (isNewSearch) {
+            totalPage = Math.ceil(response.data.totalHits / 40);
         }
 
         renderGallery(response.data.hits);
@@ -83,7 +90,7 @@ async function fetchPics(str, isNewSearch) {
 }
 
 function clearCallery() {
-    page = 0;
+    page = 1;
     renderGallery([]);
     showBtnLoadMore(false);
 }

@@ -2,11 +2,23 @@ body {
   width: 100%;
   height: 100vh;
 
+  line-height: 1.5;
+  font-family: sans-serif;
+
   background-color: #ffd700;
   background-image: url("../images/logo.png");
+  background-size: 90% auto;
   background-repeat: no-repeat;
   background-position: center center;
   background-attachment: fixed;
+
+  @media screen and (min-width: 768px) {
+    background-size: 75% auto;
+  }
+
+  @media screen and (min-width: 1024px) {
+    background-size: 50% auto;
+  }
 }
 
 header,
@@ -52,7 +64,7 @@ header {
 }
 
 main {
-  padding: 60px 5px 0px;
+  padding: 60px 5px 10px;
 }
 
 .gallery {
@@ -72,7 +84,6 @@ main {
   border: 5px;
   border-radius: 5px;
 
-  // background-color: #00e811;
   background-color: #7f975c;
   color: #6e4691;
 
@@ -100,24 +111,5 @@ main {
 
   .info {
     align-items: flex-end;
-  }
-}
-
-.load-more {
-  color: #ffd700;
-  background-color: #0057b8;
-
-  cursor: pointer;
-
-  border-radius: 5px;
-
-  &:hover {
-    background: #eec699;
-    background-color: #9946a7;
-  }
-
-  &:focus {
-    color: #ddb588;
-    background-color: #883506;
   }
 }

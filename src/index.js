@@ -3,18 +3,19 @@ import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import { Loading } from 'notiflix/build/notiflix-loading-aio';
 import SimpleLightbox from "simplelightbox";
 import "simplelightbox/dist/simple-lightbox.min.css";
+import throttle from "lodash.throttle";
 
-let page = 1;
-let totalPage = 1;
-let query = "";
+
+let page = null;
+let totalPage = null;
+let query = null;
 let lightBox = null;
+let scrollEvent = false;
 
 let galleryRef = getElement(".gallery");
-let btnLoadMoreRef = getElement(".load-more");
 
-clearCallery();
 getElement("#search-form").addEventListener("submit", onSearch);
-btnLoadMoreRef.addEventListener("click", onLoadMore);
+document.addEventListener("scroll", throttle(onScroll, 500));
 
 function getElement(selector) {
     return document.querySelector(selector);
@@ -22,43 +23,29 @@ function getElement(selector) {
 
 function onSearch(event) {
     event.preventDefault();
-    
-    try {
-        fetchPics(event.srcElement.searchQuery.value.trim(), true);
-    } catch (error) {
-        Notify.failure(error.message);
-    }
-}
 
-function onLoadMore() {
-    page += 1;
+    clearCallery();
+    query = event.srcElement.searchQuery.value.trim();
+    page = 1;
 
-    if (page > totalPage) {
-        showBtnLoadMore(false);
-        Notify.info("We're sorry, but you've reached the end of search results.");
+    if (!query) {
+        Notify.info("You have entered an empty search string.");
         return;
     }
     
     try {
-        fetchPics(query, false);
+        fetchPics();
     } catch (error) {
         Notify.failure(error.message);
     }
 }
 
-async function fetchPics(str, isNewSearch) {
-    if (isNewSearch) {
-        clearCallery("");
-        query = str;
+function clearCallery() {
+    scrollEvent = false;
+    galleryRef.innerHTML = "";
+}
 
-        if (!str) {
-            Notify.info("You have entered an empty search string.");
-            return;
-        }
-    }
-
-    showBtnLoadMore(false);
-
+async function fetchPics() {
     const searchParams = new URLSearchParams({
         key: "31500744-82fe9083580524fe3bc41bb93",
         q: query,
@@ -70,6 +57,8 @@ async function fetchPics(str, isNewSearch) {
     }).toString();
 
     try {
+        let isNewSearch = page === 1;
+
         if (isNewSearch) {
             Loading.hourglass();
         } else {
@@ -84,20 +73,13 @@ async function fetchPics(str, isNewSearch) {
 
         if (isNewSearch) {
             totalPage = Math.ceil(response.data.totalHits / 40);
-            Notify.info(`Hooray! We found ${response.data.totalHits} images.`);
+            Notify.info(`Hooray! We found ${response.data.totalHits < 500 ? response.data.totalHits : "over 500"} images.`);
         }
 
         renderGallery(response.data.hits);
-        showBtnLoadMore(true);
     } catch (error) {
         Notify.failure(error.message);
     };
-}
-
-function clearCallery() {
-    page = 1;
-    galleryRef.innerHTML = "";
-    showBtnLoadMore(false);
 }
 
 function renderGallery(data) {
@@ -126,13 +108,11 @@ function renderGallery(data) {
     
     addLightBox();
 
-    if (page > 1) {
-        scrollScreen();
-    }
-}
+    scrollEvent = true;
 
-function showBtnLoadMore(isShow) {
-    btnLoadMoreRef.style.display = isShow ? "block" : "none";
+    if (page > 1) {
+        scrollToNextPage();
+    }
 }
 
 function addLightBox() {
@@ -143,13 +123,35 @@ function addLightBox() {
     }
 }
 
-function scrollScreen() {
-    let { height: cardHeight } = document
-        .querySelector(".gallery")
-        .firstElementChild.getBoundingClientRect();
+function scrollToNextPage() {
+    let { height: cardHeight } = getElement(".gallery").firstElementChild.getBoundingClientRect();
 
     window.scrollBy({
         top: cardHeight * 2,
         behavior: "smooth",
     });
+}
+
+function onScroll() {
+    let {scrollTop, clientHeight, scrollHeight} = document.documentElement;
+    
+    if (scrollEvent && scrollTop + clientHeight >= scrollHeight) {
+        onLoadMore();
+    }
+}
+
+function onLoadMore() {
+    page += 1;
+
+    if (page > totalPage) {
+        scrollEvent = false;
+        Notify.info("We're sorry, but you've reached the end of search results.");
+        return;
+    }
+    
+    try {
+        fetchPics();
+    } catch (error) {
+        Notify.failure(error.message);
+    }
 }

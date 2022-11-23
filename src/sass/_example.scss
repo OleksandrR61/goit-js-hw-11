@@ -120,7 +120,15 @@ main {
 
   .info {
     display: flex;
-
+    
     align-items: flex-end;
+    
+    gap: 30px;
+  
+    justify-content: center;
+
+    &-item {
+      flex-basis: calc((100% - 90px) / 4);
+    }
   }
 }

@@ -33,11 +33,7 @@ function onSearch(event) {
         return;
     }
     
-    try {
-        fetchPics();
-    } catch (error) {
-        Notify.failure(error.message);
-    }
+    fetchPics();
 }
 
 function clearCallery() {
@@ -149,9 +145,5 @@ function onLoadMore() {
         return;
     }
     
-    try {
-        fetchPics();
-    } catch (error) {
-        Notify.failure(error.message);
-    }
+    fetchPics();
 }

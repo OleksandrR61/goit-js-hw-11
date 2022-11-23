@@ -42,12 +42,14 @@ header {
     margin-right: 10;
   }
 
+  button {
+    cursor: pointer;
+  }
+
   input,
   button {
     background-color: #ffd700;
     color: #0057b8;
-
-    cursor: pointer;
 
     border-radius: 5px;
 
@@ -112,6 +114,8 @@ main {
     margin: 0 auto;
 
     border-radius: 5px 5px 0 0;
+
+    cursor: zoom-in;
   }
 
   .info {

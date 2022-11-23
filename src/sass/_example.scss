@@ -81,11 +81,12 @@ main {
   flex-direction: column;
   overflow: hidden;
 
-  border: 5px;
   border-radius: 5px;
 
   background-color: #7f975c;
   color: #6e4691;
+
+  font-size: small;
 
   text-decoration: none;
 
@@ -114,6 +115,8 @@ main {
   }
 
   .info {
+    display: flex;
+
     align-items: flex-end;
   }
 }

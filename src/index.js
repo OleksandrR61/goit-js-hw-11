@@ -73,7 +73,7 @@ async function fetchPics() {
 
         if (isNewSearch) {
             totalPage = Math.ceil(response.data.totalHits / 40);
-            Notify.info(`Hooray! We found ${response.data.totalHits < 500 ? response.data.totalHits : "over 500"} images.`);
+            Notify.success(`Hooray! We found ${response.data.totalHits < 500 ? response.data.totalHits : "over 500"} images.`);
         }
 
         renderGallery(response.data.hits);

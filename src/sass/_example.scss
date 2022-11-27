@@ -123,12 +123,16 @@ main {
     
     align-items: flex-end;
     
-    gap: 10px;
-  
-    justify-content: center;
+    justify-content: space-evenly;
 
     &-item {
-      flex-basis: calc((100% - 30px) / 4);
+      font-weight: bold;
+
+      margin: 10px 0;
+
+      p {
+        margin: 0;
+      }
     }
   }
 }

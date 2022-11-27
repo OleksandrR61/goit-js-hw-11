@@ -85,18 +85,18 @@ function renderGallery(data) {
             markup += `<a href="${largeImageURL}" class="photo-card gallery__item">
               <img src="${webformatURL}" alt="${tags}" loading="lazy" class="gallery__image" />
               <div class="info">
-                <p class="info-item">
-                  <b>${likes} Likes</b>
-                </p>
-                <p class="info-item">
-                  <b>${views} Views</b>
-                </p>
-                <p class="info-item">
-                  <b>${comments} Comments</b>
-                </p>
-                <p class="info-item">
-                  <b>${downloads} Downloads</b>
-                </p>
+                <div class="info-item">
+                  <p>${likes}</p><p>Likes</p>
+                </div>
+                <div class="info-item">
+                  <p>${views}</p><p>Views</p>
+                </div>
+                <div class="info-item">
+                  <p>${comments}</p><p>Comments</p>
+                </div>
+                <div class="info-item">
+                  <p>${downloads}</p><p>Downloads</p>
+                </div>
               </div>
             </a>`});        
     }

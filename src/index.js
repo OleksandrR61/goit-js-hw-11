@@ -86,16 +86,16 @@ function renderGallery(data) {
               <img src="${webformatURL}" alt="${tags}" loading="lazy" class="gallery__image" />
               <div class="info">
                 <p class="info-item">
-                  <b><p>${likes}</p><p>Likes</p></b>
+                  <b>${likes} Likes</b>
                 </p>
                 <p class="info-item">
-                  <b><p>${views}</p><p>Views</p></b>
+                  <b>${views} Views</b>
                 </p>
                 <p class="info-item">
-                  <b><p>${comments}</p><p>Comments</p></b>
+                  <b>${comments} Comments</b>
                 </p>
                 <p class="info-item">
-                  <b><p>${downloads}</p><p>Downloads</p></b>
+                  <b>${downloads} Downloads</b>
                 </p>
               </div>
             </a>`});        
